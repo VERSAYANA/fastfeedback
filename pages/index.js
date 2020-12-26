@@ -1,7 +1,8 @@
 import Head from 'next/head';
-import { Button, Heading, Text } from '@chakra-ui/react';
+import { Button, Heading, Text, Flex } from '@chakra-ui/react';
 
 import { useAuth } from '@/lib/auth';
+import { Logo } from '@/styles/icons';
 
 export default function Home() {
   const auth = useAuth();
@@ -16,15 +17,15 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <Flex direction="column" height="100%">
       <Head>
         <title>Fast Feedback</title>
       </Head>
-      <main>
-        <Heading>Fast Feedback</Heading>
+      <Flex as="main" direction="column">
+        <Logo boxSize="32px" />
         {signInOut}
         <Text>{auth?.user?.email}</Text>
-      </main>
-    </div>
+      </Flex>
+    </Flex>
   );
 }
