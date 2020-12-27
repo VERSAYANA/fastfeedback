@@ -1,3 +1,5 @@
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Modal,
   ModalOverlay,
@@ -17,12 +19,14 @@ import {
   FormHelperText,
   Input
 } from '@chakra-ui/react';
-import React from 'react';
+import { createSite } from '@/lib/db';
 
 const AddSiteModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { register, handleSubmit } = useForm();
 
   const initialRef = React.useRef();
+  const onCreateSite = (siteData) => createSite(siteData);
 
   return (
     <>
@@ -37,20 +41,32 @@ const AddSiteModal = () => {
         Add Your First Site
       </Button>
 
-      <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent as="form" onSubmit={handleSubmit(onCreateSite)}>
           <ModalHeader fontWeight="bold">Add site</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Name</FormLabel>
-              <Input ref={initialRef} placeholder="My Site" />
+              <Input
+                placeholder="My Site"
+                name="site"
+                ref={register({
+                  required: true
+                })}
+              />
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Link</FormLabel>
-              <Input placeholder="https://website.com" />
+              <Input
+                name="url"
+                placeholder="https://website.com"
+                ref={register({
+                  required: true
+                })}
+              />
             </FormControl>
           </ModalBody>
 
@@ -58,7 +74,9 @@ const AddSiteModal = () => {
             <Button onClick={onClose} mr={3}>
               Cancel
             </Button>
-            <Button colorScheme="cyan">Create</Button>
+            <Button type="submit" colorScheme="cyan">
+              Create
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
